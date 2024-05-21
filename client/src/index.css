@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-color: #9255fd;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* background-color: lightgray; */
+}
+
+.ant-upload-list-item-name,
+.ant-upload-list-item-actions,
+.ant-upload-icon,
+.ant-upload-list-item,
+.ant-upload-list-item-error,
+.ant-upload-list,
+.ant-upload-list-text {
+  display: none;
+}
