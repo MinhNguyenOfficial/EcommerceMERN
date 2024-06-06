@@ -14,14 +14,19 @@ import * as UserService from '../../services/UserService';
 // import * as message from '../../components/Message/Message';
 import { useMutationHook } from '../../hooks/useMutationHook';
 import Loading from '../../components/Loading/Loading';
+import { useSelector } from 'react-redux';
 
 const SignUpPage = () => {
+  const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  if (user.id) {
+    navigate('/');
+  }
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
-  const navigate = useNavigate();
   const handleNavigateSignIn = () => {
     navigate('/sign-in');
   };

@@ -16,9 +16,10 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import * as UserService from '../../services/UserService';
 import { resetUser } from '../../redux/slides/userSlide';
+import { updateSearchInput } from '../../redux/slides/productSlide';
 
 export default function Header() {
-  const apiEndpoint = import.meta.env.VITE_BACKEND_API_URL;
+  const orderItems = useSelector((state) => state.order.orderItems);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const naviagte = useNavigate();
@@ -40,6 +41,10 @@ export default function Header() {
     naviagte('/system/admin');
   };
 
+  const handleSearchInputChange = (e) => {
+    dispatch(updateSearchInput(e.target.value));
+  };
+
   const content = (
     <div>
       <WrapperContentPopup onClick={handleLogout}>
@@ -57,21 +62,23 @@ export default function Header() {
   );
   return (
     <header>
-      <WrapperHeader>
+      <div className="py-3 flex items-center gap-4 bg-blue-500">
         <Col span={6} className="flex items-center justify-center">
           {/* <WrapperTextHeader>MinhShop</WrapperTextHeader> */}
-          <a href="/">MinhShop</a>
+          {/* <a href="/">MinhShop</a> */}
+          <p onClick={() => naviagte('/')}>Minh Shop</p>
         </Col>
         <Col span={12} className="flex items-center justify-center">
           <ButtonInputSearch
+            onChange={handleSearchInputChange}
             placeholder={'Search...'}
             size={'large'}
             textButton={'Search'}
           />
         </Col>
         <Col span={6} className="flex">
-          <WrapperHeaderAccout>
-            {user ? (
+          <div className="flex text-white gap-2">
+            {user?.avatar ? (
               <img
                 className="h-10 w-10 rounded-full"
                 src={user?.avatar}
@@ -97,7 +104,7 @@ export default function Header() {
             {user?.access_token ? (
               <>
                 <Popover content={content} trigger="click">
-                  <WrapperTextHeaderSmall className="cursor-pointer">
+                  <WrapperTextHeaderSmall className="cursor-pointer items-center flex">
                     {user.name || user.email || 'User'}
                   </WrapperTextHeaderSmall>
                 </Popover>
@@ -113,17 +120,26 @@ export default function Header() {
                 </div>
               </div>
             )}
-            <div className="ml-2" style={{ cursor: 'pointer' }}>
-              <Badge size="small" className="flex items-center gap-2">
+            <div
+              onClick={() => naviagte('/order')}
+              className="flex items-center justify-center gap-3"
+              style={{ cursor: 'pointer' }}
+            >
+              <Badge
+                count={orderItems.length}
+                size="small"
+                className="flex items-center gap-2"
+              >
                 <ShoppingCartOutlined
+                  className="ml-10"
                   style={{ fontSize: '30px', color: '#fff' }}
                 />
-                <WrapperTextHeaderSmall>Giỏ hàng</WrapperTextHeaderSmall>
               </Badge>
+              <WrapperTextHeaderSmall>Giỏ hàng</WrapperTextHeaderSmall>
             </div>
-          </WrapperHeaderAccout>
+          </div>
         </Col>
-      </WrapperHeader>
+      </div>
     </header>
   );
 }

@@ -9,5 +9,6 @@ router.put('/update/:id', authMiddleware, productController.updateProduct);
 router.get('/details/:id', productController.getProductDetails);
 router.get('/get-all', productController.getAllProduct);
 router.delete('/delete/:id',authMiddleware, productController.deleteProduct);
+router.delete('/delete-products',authMiddleware, productController.deleteProducts);
 
 module.exports = router;

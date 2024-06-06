@@ -16,6 +16,7 @@ const ButtonComponent = ({
       }}
       size={size}
       {...rests}
+      disabled={disabled}
     >
       <span style={styleTextButton}>{textbutton}</span>
     </Button>

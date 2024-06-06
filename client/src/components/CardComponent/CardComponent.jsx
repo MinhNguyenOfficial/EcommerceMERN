@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import {
   StyleNameProduct,
   WrapperCardStyle,
@@ -18,14 +19,25 @@ export default function CardComponent({
   name,
   selled,
   discount,
+  productId,
 }) {
+  const navigate = useNavigate();
   return (
     <WrapperCardStyle
+      onClick={() => navigate(`product-detail/${productId}`)}
       hoverable
-      headStyle={{ width: '200px', height: '200px' }}
+      // headStyle={{ width: '200px', height: '200px' }}
       style={{ width: 200 }}
-      bodyStyle={{ padding: '10px' }}
-      cover={<img alt="example" src={image} />}
+      // bodyStyle={{ padding: '10px' }}
+      cover={
+        <img
+          alt="example"
+          src={
+            image ||
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQg15omZwr1TxPQoEw9BOCSOJAs3b0thWlmNw&usqp=CAU'
+          }
+        />
+      }
     >
       {/* <img
         style={{

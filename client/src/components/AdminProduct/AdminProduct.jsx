@@ -122,6 +122,28 @@ export default function AdminProduct() {
     getAllProduct();
   };
 
+  const handleDeleteProducts = async (selectedRows) => {
+    console.log(selectedRows)
+    const storageData = localStorage.getItem('access_token');
+    if (!storageData || !isJsonString(storageData)) {
+      throw new Error('No token found');
+    }
+    const tokenData = JSON.parse(storageData);
+    const res = await ProductServive.deleteProducts(
+      selectedRows,
+      tokenData
+    ).then((res) => res.data);
+
+    if (res.status === 'OK') {
+      message.success(res.message);
+    } else {
+      message.error(res.message);
+    }
+
+    setIsConfirmModalOpen(false);
+    getAllProduct();
+  };
+
   const handleCancel = () => {
     setIsModalOpen(false);
   };
@@ -336,7 +358,6 @@ export default function AdminProduct() {
   const tableData =
     products?.length &&
     products.map((product) => ({ ...product, key: product._id }));
-
   return (
     <div>
       <h1>Quản lý sản phẩm</h1>
@@ -346,6 +367,7 @@ export default function AdminProduct() {
       <Loading isLoading={isLoading}>
         <div className="mt-5">
           <TableComponent
+            handleDelete={handleDeleteProducts}
             data={tableData}
             columns={columns}
             onRow={(record, rowIndex) => {

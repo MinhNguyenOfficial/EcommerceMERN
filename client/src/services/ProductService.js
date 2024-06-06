@@ -2,8 +2,15 @@ import axios from 'axios';
 
 const apiEndpoint = import.meta.env.VITE_BACKEND_API_URL;
 
-export const getAllProduct = async (id, data) => {
-  const res = await axios.get(`${apiEndpoint}/product/get-all`);
+export const getAllProduct = async (limit = 12) => {
+  const res = await axios.get(`${apiEndpoint}/product/get-all?limit=${limit}`);
+  return res.data;
+};
+
+export const getAllSearchProduct = async (searchText, limit) => {
+  const res = await axios.get(
+    `${apiEndpoint}/product/get-all?filter=name&filter=${searchText}&limit=${limit}`
+  );
   return res.data;
 };
 
@@ -35,6 +42,21 @@ export const deleteProduct = async (id, tokenData) => {
     },
     withCredentials: true,
   });
+  return response;
+};
+
+export const deleteProducts = async (productIdList, tokenData) => {
+  const response = await axios.delete(
+    `${apiEndpoint}/product/delete-products`,
+    {
+      data: productIdList,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${tokenData}`,
+      },
+      withCredentials: true,
+    }
+  );
   return response;
 };
 

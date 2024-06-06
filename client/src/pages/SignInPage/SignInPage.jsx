@@ -7,7 +7,7 @@ import {
 import imageLogo from '../../assets/images/logo-login.png';
 import { Image } from 'antd';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { EyeFilled, EyeInvisibleFilled } from '@ant-design/icons';
 import { useState } from 'react';
 import * as UserService from '../../services/UserService';
@@ -16,15 +16,19 @@ import Loading from '../../components/Loading/Loading';
 import { useEffect } from 'react';
 import { message } from 'antd';
 import { jwtDecode } from 'jwt-decode';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { updateUser } from '../../redux/slides/userSlide';
 
 const SignInPage = () => {
+  const location = useLocation();
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState('a@a.c');
   const [password, setPassword] = useState('123456');
   const [isShowPassword, setIsShowPassword] = useState(false);
-  const navigate = useNavigate();
+
   const handleNavigateSignUp = () => {
     navigate('/sign-up');
   };
@@ -32,18 +36,26 @@ const SignInPage = () => {
   const mutation = useMutationHook((data) => UserService.loginUser(data));
 
   const { data, isPending, isSuccess, isError } = mutation;
+
+  const handleLoginSuccess = async () => {
+    message.success('Đăng nhập thành công!');
+    localStorage.setItem('access_token', JSON.stringify(data?.access_token));
+    if (data?.access_token) {
+      const decoded = jwtDecode(data?.access_token);
+      if (decoded?.id) {
+        await handleGetUserDetails(decoded?.id, data?.access_token);
+      }
+    }
+    if (location.state) {
+      navigate(location.state);
+    } else {
+      navigate('/');
+    }
+  };
+
   useEffect(() => {
     if (isSuccess) {
-      message.success('Đăng nhập thành công!');
-      localStorage.setItem('access_token', JSON.stringify(data?.access_token));
-      if (data?.access_token) {
-        const decoded = jwtDecode(data?.access_token);
-        if (decoded?.id) {
-          handleGetUserDetails(decoded?.id, data?.access_token);
-        }
-      }
-
-      navigate('/');
+      handleLoginSuccess();
     } else if (isError) {
       message.error('Có lỗi xảy ra!');
     }
@@ -65,6 +77,13 @@ const SignInPage = () => {
       password,
     });
   };
+
+  useEffect(() => {
+    if (user.id && !location.state) {
+      navigate('/');
+    }
+  }, [user.id]);
+
   return (
     <div
       style={{

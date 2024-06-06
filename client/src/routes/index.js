@@ -1,4 +1,5 @@
 import AdminPage from '../pages/AdminPage/AdminPage';
+import CheckoutPage from '../pages/CheckoutPage/CheckoutPage';
 import HomePage from '../pages/HomePage/HomePage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 import OrderPage from '../pages/OrderPage/OrderPage';
@@ -18,6 +19,11 @@ export const routes = [
   {
     path: '/order',
     page: OrderPage,
+    isShowHeader: true,
+  },
+  {
+    path: '/order/checkout',
+    page: CheckoutPage,
     isShowHeader: true,
   },
   {
@@ -41,7 +47,7 @@ export const routes = [
     isShowHeader: false,
   },
   {
-    path: '/product-detail',
+    path: '/product-detail/:id',
     page: ProductDetailPage,
     isShowHeader: true,
   },
